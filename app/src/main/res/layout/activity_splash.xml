@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    tools:context=".activity.SplashActivity">
+
+    <ImageView
+        android:id="@+id/iv_ibiLogo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:maxWidth="300dp"
+        android:padding="60dp"
+        android:src="@drawable/ibilogo" />
+
+    <ImageView
+        android:id="@+id/iv_ibiLandscape"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/splashlandscape" />
+</RelativeLayout>

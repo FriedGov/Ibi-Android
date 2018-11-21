@@ -1,0 +1,166 @@
+apply plugin: 'com.android.application'
+
+
+
+apply plugin: 'findbugs'
+findbugs {
+    sourceSets = []
+    ignoreFailures = true
+}
+
+task findbugs(type: FindBugs, dependsOn: "assembleDebug") {
+
+    description 'Run findbugs'
+    group 'verification'
+
+    classes = fileTree('build/intermediates/classes/debug/')
+    source = fileTree('src/main/java')
+    classpath = files()
+
+    effort = 'max'
+
+    // excludeFilter = file("../config/findbugs/exclude.xml")
+
+    reports {
+        xml.enabled = true
+        html.enabled = false
+    }
+}
+
+check.doLast {
+    project.tasks.getByName("findbugs").execute()
+}
+
+
+
+apply plugin: 'checkstyle'
+
+checkstyle {
+    toolVersion "7.6.1"
+}
+
+task checkstyle(type: Checkstyle) {
+    description 'Runs Checkstyle inspection against Android sourcesets.'
+    group = 'Code Quality'
+
+    ignoreFailures = true
+    showViolations = false
+    source 'src/main', 'src/release', 'src/androidTest/java'
+    include '**/*.java'
+    exclude '**/gen/**'
+    exclude '**/R.java'
+    exclude '**/BuildConfig.java'
+    reports {
+        xml.destination "$project.buildDir/reports/checkstyle/checkstyle-report.xml"
+    }
+    classpath = files()
+    configFile = file("config/CheckStyle.xml")
+
+    configProperties.lineWidth = 120
+}
+
+
+
+
+
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.2'
+    }
+
+
+}
+
+apply plugin: 'jacoco-android'
+
+jacocoAndroidUnitTestReport {
+    csv.enabled false
+    html.enabled true
+    xml.enabled true
+}
+
+
+android {
+    compileSdkVersion 26
+    defaultConfig {
+        applicationId "com.example.lexar.projecthbo_ictbv"
+        minSdkVersion 15
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+
+    testOptions {
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+            }
+        }
+    }
+
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            testCoverageEnabled true
+        }
+    }
+}
+
+
+repositories {
+    mavenCentral()
+    jcenter()
+    maven { url 'https://jitpack.io' }
+}
+
+sourceCompatibility = 1.8
+
+jacoco {
+    toolVersion = "0.8.0"
+}
+
+
+findbugs {
+    ignoreFailures = true
+}
+
+
+
+
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+
+    }
+}
+
+
+dependencies {
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    //noinspection GradleCompatible
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.github.arcadefire:nice-spinner:1.3.4'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    implementation 'com.github.dimorinny:floating-text-button:0.0.4'
+    implementation 'me.zhanghai.android.materialprogressbar:library:1.4.2'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation 'com.android.support:support-annotations:27.1.1'
+}
